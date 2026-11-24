@@ -7,7 +7,11 @@ from django.conf.urls.static import static
 admin.site.site_header = "OREBZ STUDIO"
 admin.site.site_title = "Orebz Studio Management"
 admin.site.index_title = "Welcome to Orebz Studio"
-admin.site.site_url = "http://localhost:5173/"
+admin.site.site_url = getattr(
+    settings,
+    'FRONTEND_URL',
+    'http://localhost:5173'
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),

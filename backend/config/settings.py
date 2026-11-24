@@ -13,9 +13,15 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
 # SECURITY
+# SECURITY
 SECRET_KEY = os.getenv("SECRET_KEY")
-DEBUG = True
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+DEBUG = os.getenv("DEBUG", "True").lower() == "true"
+
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    ".onrender.com",
+]
 
 # APPLICATIONS
 INSTALLED_APPS = [
@@ -39,6 +45,7 @@ INSTALLED_APPS = [
 # MIDDLEWARE
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -47,18 +54,22 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
 # CORS CONFIGURATION
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
-    'http://localhost:5175',
-    'http://127.0.0.1:5175',
+    'https://orebz-studio.netlify.app',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://orebz-studio.netlify.app',
 ]
 
 # FRONTEND URL
-FRONTEND_URL = 'http://localhost:5173'
-
+FRONTEND_URL = os.getenv(
+    'FRONTEND_URL',
+    'http://localhost:5173'
+)
 # URL CONFIGURATION
 ROOT_URLCONF = 'config.urls'
 
@@ -83,12 +94,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
+# DATABASE}
 # DATABASE
+import dj_database_url
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+    )
 }
 
 # PASSWORD VALIDATION
@@ -115,11 +129,17 @@ USE_TZ = True
 
 # STATIC FILES
 STATIC_URL = '/static/'
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
-
-STATIC_URL = "/static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # GMAIL SMTP CONFIGURATION
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
