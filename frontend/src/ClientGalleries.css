@@ -1,0 +1,370 @@
+
+/* ==========================================
+   OREBZ STUDIO - CLIENT GALLERIES
+========================================== */
+
+.client-galleries {
+  min-height: 100vh;
+  width: 100%;
+  padding: 100px 6%;
+  background: #f7f3ec;
+  color: #171717;
+  display: flex;
+  align-items: center;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* LEFT IMAGE - EXISTING OREBZ PHOTO */
+
+.client-galleries::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 45%;
+  height: 100%;
+  background:
+    linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.05),
+      rgba(0, 0, 0, 0.4)
+    ),
+    url("./assets/images/portrait-04.jpg")
+      center center / cover no-repeat;
+  z-index: 0;
+}
+
+.client-galleries::after {
+  content: "OREBZ STUDIO  |  YOUR MEMORIES, BEAUTIFULLY PRESERVED";
+  position: absolute;
+  bottom: 35px;
+  left: 30px;
+  color: #fff;
+  font-size: 10px;
+  letter-spacing: 2px;
+  z-index: 1;
+}
+
+/* ==========================================
+   LOGIN AND MESSAGE CONTENT
+========================================== */
+
+.gallery-access {
+  position: relative;
+  z-index: 2;
+  width: 48%;
+  max-width: 600px;
+  margin-left: auto;
+  text-align: center;
+}
+
+.gallery-eyebrow {
+  color: #a65c32;
+  font-size: 11px;
+  letter-spacing: 4px;
+  font-weight: 700;
+  margin-bottom: 22px;
+}
+
+.gallery-access h1 {
+  font-size: clamp(35px, 4vw, 55px);
+  line-height: 1.15;
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.gallery-access h1 span {
+  color: #a65c32;
+}
+
+.gallery-intro {
+  color: #777;
+  line-height: 1.9;
+  max-width: 450px;
+  margin: 0 auto 35px;
+  font-size: 14px;
+}
+
+/* ==========================================
+   EMAIL FORM
+========================================== */
+
+.gallery-form {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 12px;
+  padding: 35px;
+  background: #fff;
+  border: 1px solid #e6dfd5;
+  border-radius: 4px;
+  box-shadow: 0 15px 45px rgba(0, 0, 0, 0.05);
+}
+
+.gallery-form label {
+  font-size: 12px;
+  font-weight: 600;
+  margin-top: 8px;
+  color: #333;
+}
+
+.gallery-form input {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  outline: none;
+  font-size: 14px;
+  background: #fff;
+  color: #171717;
+  box-sizing: border-box;
+}
+
+.gallery-form input:focus {
+  border-color: #a65c32;
+}
+
+.gallery-form button {
+  margin-top: 15px;
+  padding: 17px;
+  border: none;
+  border-radius: 3px;
+  background: #171717;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.gallery-form button:hover {
+  background: #a65c32;
+}
+
+.gallery-form button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ==========================================
+   NOT FOUND / NOT READY MESSAGES
+========================================== */
+
+.gallery-access > p {
+  color: #777;
+  line-height: 1.9;
+  font-size: 14px;
+}
+
+.gallery-access > p strong,
+.gallery-access > p b {
+  color: #171717;
+}
+
+/* ==========================================
+   ACTION LINKS AND BUTTONS
+========================================== */
+
+.gallery-access a,
+.gallery-access button {
+  transition: all 0.3s ease;
+}
+
+/* Links inside message screens */
+
+.gallery-access a {
+  color: #a65c32;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.gallery-access a:hover {
+  color: #171717;
+}
+
+/* Contact and back links */
+
+.gallery-access a[href*="#contact"],
+.gallery-access a[href="/"],
+.gallery-access a[href*="localhost"] {
+  display: inline-block;
+  margin: 10px 5px;
+  padding: 13px 20px;
+  border: 1px solid #171717;
+  border-radius: 3px;
+  color: #171717;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+}
+
+.gallery-access a[href*="#contact"]:hover,
+.gallery-access a[href="/"]:hover,
+.gallery-access a[href*="localhost"]:hover {
+  background: #171717;
+  color: #fff;
+}
+
+/* Sign out button */
+
+.gallery-access button {
+  display: inline-block;
+  margin: 10px 5px;
+  padding: 13px 22px;
+  border: none;
+  border-radius: 3px;
+  background: #171717;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.gallery-access button:hover {
+  background: #a65c32;
+}
+
+/* Error message */
+
+.gallery-error {
+  color: #c62828;
+  margin-top: 20px;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* ==========================================
+   CLIENT GALLERY RESULTS
+========================================== */
+
+.gallery-results {
+  position: relative;
+  z-index: 2;
+  width: 52%;
+  max-width: 850px;
+  margin-left: auto;
+}
+
+.gallery-results h2 {
+  font-size: clamp(28px, 3vw, 40px);
+  font-weight: 500;
+  margin-bottom: 12px;
+}
+
+.gallery-results > p:not(.gallery-eyebrow) {
+  color: #777;
+  margin-bottom: 30px;
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+.client-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.client-photo {
+  overflow: hidden;
+  border-radius: 3px;
+  background: #e6dfd5;
+  aspect-ratio: 4 / 5;
+}
+
+.client-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.client-photo:hover img {
+  transform: scale(1.05);
+}
+
+/* ==========================================
+   TABLET
+========================================== */
+
+@media (max-width: 900px) {
+  .client-galleries {
+    padding-left: 5%;
+    padding-right: 5%;
+  }
+
+  .client-galleries::before {
+    width: 38%;
+  }
+
+  .gallery-access {
+    width: 56%;
+  }
+
+  .gallery-results {
+    width: 58%;
+  }
+
+  .gallery-form {
+    padding: 25px;
+  }
+}
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 650px) {
+  .client-galleries {
+    display: block;
+    padding: 300px 6% 60px;
+    min-height: 100vh;
+  }
+
+  .client-galleries::before {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 260px;
+  }
+
+  .client-galleries::after {
+    top: 225px;
+    bottom: auto;
+    left: 18px;
+    font-size: 8px;
+    letter-spacing: 1.5px;
+  }
+
+  .gallery-access,
+  .gallery-results {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .gallery-access h1 {
+    font-size: 36px;
+  }
+
+  .gallery-form {
+    padding: 25px 20px;
+  }
+
+  .client-photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .gallery-results h2 {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 380px) {
+  .client-photo-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,11 @@
+from django.shortcuts import render
+
+# Create your views here.
+from rest_framework import generics # type: ignore
+from .models import Booking
+from .serializers import BookingSerializer
+
+
+class BookingCreateView(generics.CreateAPIView):
+    queryset = Booking.objects.all()
+    serializer_class = BookingSerializer

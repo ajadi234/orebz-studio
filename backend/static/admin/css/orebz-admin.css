@@ -1,0 +1,810 @@
+/* =====================================================
+   OREBZ STUDIO - DJANGO ADMIN THEME (modern, centred)
+   Save as: backend/static/admin/css/orebz-admin.css
+   ===================================================== */
+
+/* ---------- 1. BRAND COLOURS (light mode) ---------- */
+
+:root,
+html[data-theme="light"] {
+  --orebz-accent: #c2410c;
+  --orebz-accent-dark: #9a3412;
+  --orebz-accent-soft: #fff1e8;
+  --orebz-ink: #171717;
+  --orebz-ink-soft: #262626;
+  --orebz-paper: #f6f3ef;
+  --orebz-card: #ffffff;
+  --orebz-line: #e9e4dc;
+
+  --orebz-max: 1240px;
+  --orebz-radius: 16px;
+  --orebz-shadow: 0 1px 2px rgba(23, 23, 23, 0.04),
+    0 8px 24px rgba(23, 23, 23, 0.06);
+  --orebz-shadow-hover: 0 2px 4px rgba(23, 23, 23, 0.06),
+    0 16px 36px rgba(23, 23, 23, 0.12);
+
+  --primary: var(--orebz-accent);
+  --secondary: var(--orebz-ink-soft);
+  --accent: var(--orebz-accent);
+  --primary-fg: #ffffff;
+
+  --body-fg: #262626;
+  --body-bg: var(--orebz-paper);
+  --body-quiet-color: #6b6b6b;
+  --body-loud-color: #000000;
+
+  --header-color: #d6d3d1;
+  --header-branding-color: #ffffff;
+  --header-bg: var(--orebz-ink);
+  --header-link-color: #ffffff;
+
+  --breadcrumbs-fg: #6b6b6b;
+  --breadcrumbs-link-fg: var(--orebz-accent);
+  --breadcrumbs-bg: transparent;
+
+  --link-fg: var(--orebz-accent);
+  --link-hover-color: var(--orebz-accent-dark);
+  --link-selected-fg: var(--orebz-accent-dark);
+
+  --hairline-color: var(--orebz-line);
+  --border-color: #d9d3ca;
+
+  --darkened-bg: #f3efe9;
+  --selected-bg: var(--orebz-accent-soft);
+  --selected-row: var(--orebz-accent-soft);
+
+  --button-fg: #ffffff;
+  --button-bg: var(--orebz-accent);
+  --button-hover-bg: var(--orebz-accent-dark);
+  --default-button-bg: var(--orebz-ink);
+  --default-button-hover-bg: #000000;
+  --close-button-bg: #737373;
+  --close-button-hover-bg: #525252;
+  --delete-button-bg: #b91c1c;
+  --delete-button-hover-bg: #991b1b;
+
+  --object-tools-fg: #ffffff;
+  --object-tools-bg: var(--orebz-ink);
+  --object-tools-hover-bg: var(--orebz-accent);
+}
+
+/* ---------- 2. DARK MODE ---------- */
+
+html[data-theme="dark"] {
+  --orebz-accent: #ea580c;
+  --orebz-accent-dark: #f97316;
+  --orebz-accent-soft: #2a1a12;
+  --orebz-ink: #0a0a0a;
+  --orebz-ink-soft: #1f1f1f;
+  --orebz-paper: #111111;
+  --orebz-card: #1a1a1a;
+  --orebz-line: #2e2e2e;
+  --orebz-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --orebz-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.4),
+    0 16px 36px rgba(0, 0, 0, 0.5);
+
+  --primary: var(--orebz-accent);
+  --secondary: var(--orebz-ink-soft);
+  --accent: var(--orebz-accent);
+
+  --body-fg: #e5e5e5;
+  --body-bg: var(--orebz-paper);
+  --body-quiet-color: #a3a3a3;
+  --body-loud-color: #ffffff;
+
+  --header-bg: var(--orebz-ink);
+  --breadcrumbs-fg: #a3a3a3;
+  --breadcrumbs-bg: transparent;
+
+  --link-fg: #fb923c;
+  --link-hover-color: #fdba74;
+  --link-selected-fg: #fdba74;
+  --breadcrumbs-link-fg: #fb923c;
+
+  --hairline-color: var(--orebz-line);
+  --border-color: #3a3a3a;
+  --darkened-bg: #1f1f1f;
+  --selected-bg: #2a1a12;
+  --selected-row: #2a1a12;
+
+  --button-bg: var(--orebz-accent);
+  --button-hover-bg: var(--orebz-accent-dark);
+  --default-button-bg: #2e2e2e;
+  --default-button-hover-bg: #3a3a3a;
+  --object-tools-bg: #2e2e2e;
+  --object-tools-hover-bg: var(--orebz-accent);
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme]),
+  html[data-theme="auto"] {
+    --orebz-accent: #ea580c;
+    --orebz-accent-dark: #f97316;
+    --orebz-accent-soft: #2a1a12;
+    --orebz-ink: #0a0a0a;
+    --orebz-ink-soft: #1f1f1f;
+    --orebz-paper: #111111;
+    --orebz-card: #1a1a1a;
+    --orebz-line: #2e2e2e;
+    --orebz-shadow: 0 1px 2px rgba(0, 0, 0, 0.3),
+      0 8px 24px rgba(0, 0, 0, 0.35);
+    --orebz-shadow-hover: 0 2px 4px rgba(0, 0, 0, 0.4),
+      0 16px 36px rgba(0, 0, 0, 0.5);
+
+    --primary: #ea580c;
+    --secondary: #1f1f1f;
+    --accent: #ea580c;
+    --body-fg: #e5e5e5;
+    --body-bg: #111111;
+    --body-quiet-color: #a3a3a3;
+    --body-loud-color: #ffffff;
+    --header-bg: #0a0a0a;
+    --breadcrumbs-fg: #a3a3a3;
+    --breadcrumbs-bg: transparent;
+    --breadcrumbs-link-fg: #fb923c;
+    --link-fg: #fb923c;
+    --link-hover-color: #fdba74;
+    --hairline-color: #2e2e2e;
+    --border-color: #3a3a3a;
+    --darkened-bg: #1f1f1f;
+    --selected-bg: #2a1a12;
+    --selected-row: #2a1a12;
+    --button-bg: #ea580c;
+    --button-hover-bg: #f97316;
+    --default-button-bg: #2e2e2e;
+    --default-button-hover-bg: #3a3a3a;
+    --object-tools-bg: #2e2e2e;
+    --object-tools-hover-bg: #ea580c;
+  }
+}
+
+/* ---------- 3. BASE + TYPOGRAPHY ---------- */
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--body-bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+body,
+input,
+select,
+textarea,
+button {
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  letter-spacing: -0.015em;
+}
+
+a {
+  transition: color 0.2s ease, background 0.2s ease, opacity 0.2s ease;
+}
+
+/* ---------- 4. SMOOTH PAGE-TO-PAGE TRANSITIONS ---------- */
+
+/* Modern browsers (Chrome / Edge) fade smoothly between admin pages */
+@view-transition {
+  navigation: auto;
+}
+
+::view-transition-old(root) {
+  animation: orebz-fade-out 0.2s ease both;
+}
+
+::view-transition-new(root) {
+  animation: orebz-fade-in 0.3s ease both;
+}
+
+@keyframes orebz-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes orebz-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* Content gently slides up every time a page loads */
+@keyframes orebz-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.main > .content {
+  animation: orebz-rise 0.4s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after,
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ---------- 5. HEADER (full-width bar, content centred) ---------- */
+
+#header {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: 16px max(24px, calc((100vw - var(--orebz-max)) / 2 + 24px));
+  background: linear-gradient(90deg, var(--orebz-ink) 0%, #2b1409 100%);
+  border-bottom: 3px solid var(--orebz-accent);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.22);
+}
+
+#branding h1,
+#site-name {
+  margin: 0;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+#site-name a,
+#site-name a:link,
+#site-name a:visited {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+#user-tools {
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+#user-tools a {
+  border-bottom: none;
+  padding: 6px 12px;
+  border-radius: 999px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+#user-tools a:hover,
+#user-tools a:focus {
+  background: var(--orebz-accent);
+  color: #ffffff;
+}
+
+/* ---------- 6. BREADCRUMBS ---------- */
+
+div.breadcrumbs {
+  padding: 18px max(24px, calc((100vw - var(--orebz-max)) / 2 + 24px)) 0;
+  font-size: 0.85rem;
+  border: none;
+  background: transparent;
+}
+
+/* ---------- 7. PAGE LAYOUT (everything centred) ---------- */
+
+/* The side navigation is hidden so the content sits in the middle.
+   The dashboard already lists every section. */
+#nav-sidebar,
+#toggle-nav-sidebar {
+  display: none !important;
+}
+
+.main > .content {
+  width: 100%;
+  max-width: var(--orebz-max);
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+#content {
+  padding: 24px 24px 48px;
+}
+
+#content > h1 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin: 0 0 24px;
+}
+
+/* ---------- 8. DASHBOARD (cards in the middle + side panel) ---------- */
+
+.dashboard #content,
+.colMS {
+  width: auto !important;
+  margin-right: 0 !important;
+}
+
+.dashboard #content {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 8px 32px;
+  align-items: start;
+}
+
+.dashboard #content > h1 {
+  grid-column: 1 / -1;
+}
+
+.dashboard #content > h1 {
+  grid-row: 1;
+}
+
+.dashboard #content > .clear {
+  display: none;
+}
+
+/* Section cards: wide area on the left, laid out as tiles */
+.dashboard #content-main {
+  grid-column: 1;
+  grid-row: 2;
+  float: none !important;
+  width: auto !important;
+  min-width: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  align-items: start;
+}
+
+.dashboard #content-main .module {
+  margin-bottom: 0;
+}
+
+/* Recent actions: narrow panel on the right */
+.dashboard #content-related {
+  grid-column: 2;
+  grid-row: 2;
+  float: none !important;
+  width: auto !important;
+  margin: 0 !important;
+}
+
+@media (max-width: 1024px) {
+  .dashboard #content {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .dashboard #content-main,
+  .dashboard #content-related {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+/* ---------- 9. MODULE CARDS ---------- */
+
+.module {
+  background: var(--orebz-card);
+  border: 1px solid var(--hairline-color);
+  border-radius: var(--orebz-radius);
+  overflow: hidden;
+  margin-bottom: 24px;
+  box-shadow: var(--orebz-shadow);
+}
+
+.dashboard .module {
+  transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.dashboard .module:hover {
+  box-shadow: var(--orebz-shadow-hover);
+  transform: translateY(-3px);
+}
+
+.module h2,
+.module caption,
+.inline-group h2 {
+  background: var(--orebz-ink-soft);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 14px 20px;
+}
+
+.module h2 a,
+.module caption a,
+.module h2 a:link,
+.module h2 a:visited {
+  color: #ffffff;
+}
+
+.module h2 a:hover,
+.module caption a:hover {
+  color: #fdba74;
+}
+
+.dashboard .module table th,
+.dashboard .module table td {
+  padding: 14px 20px;
+  transition: background 0.2s ease;
+}
+
+.dashboard .module tr:hover th,
+.dashboard .module tr:hover td {
+  background: var(--selected-row);
+}
+
+.module td,
+.module th {
+  border-bottom: 1px solid var(--hairline-color);
+}
+
+.module a.addlink,
+.module a.changelink {
+  font-weight: 600;
+}
+
+.module a.addlink:hover,
+.module a.changelink:hover {
+  background: var(--selected-bg);
+  border-radius: 6px;
+}
+
+#recent-actions-module {
+  background: var(--orebz-card);
+}
+
+#recent-actions-module h3 {
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--body-quiet-color);
+}
+
+/* ---------- 10. LIST PAGES (Bookings, Galleries, Users...) ---------- */
+
+#changelist {
+  background: var(--orebz-card);
+  border: 1px solid var(--hairline-color);
+  border-radius: var(--orebz-radius);
+  padding: 20px;
+  box-shadow: var(--orebz-shadow);
+}
+
+#changelist .results {
+  border-radius: 12px;
+  overflow-x: auto;
+  border: 1px solid var(--hairline-color);
+}
+
+#result_list thead th {
+  background: var(--darkened-bg);
+  color: var(--body-quiet-color);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px 16px;
+}
+
+#result_list thead th a {
+  color: var(--body-quiet-color);
+}
+
+#result_list tbody td,
+#result_list tbody th {
+  padding: 14px 16px;
+  vertical-align: middle;
+  transition: background 0.2s ease;
+}
+
+#result_list tbody tr:hover td,
+#result_list tbody tr:hover th {
+  background: var(--selected-row);
+}
+
+#result_list img,
+.field-image img,
+.field-photo img,
+.field-thumbnail img {
+  max-width: 80px;
+  height: auto;
+  border-radius: 10px;
+  object-fit: cover;
+  transition: transform 0.25s ease;
+}
+
+#result_list img:hover {
+  transform: scale(1.08);
+}
+
+#changelist-search input[type="text"] {
+  min-width: 280px;
+}
+
+#changelist-filter {
+  background: var(--orebz-card);
+  border: 1px solid var(--hairline-color);
+  border-radius: var(--orebz-radius);
+  overflow: hidden;
+  box-shadow: var(--orebz-shadow);
+}
+
+#changelist-filter h2 {
+  background: var(--orebz-ink-soft);
+  color: #ffffff;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px 18px;
+}
+
+#changelist-filter li.selected a {
+  color: var(--orebz-accent);
+  font-weight: 700;
+}
+
+.paginator {
+  padding: 16px 4px 4px;
+  font-size: 0.9rem;
+}
+
+.paginator a:link,
+.paginator a:visited {
+  background: var(--orebz-ink-soft);
+  border-radius: 8px;
+}
+
+.paginator a:hover {
+  background: var(--orebz-accent);
+}
+
+/* ---------- 11. OBJECT TOOLS (the "Add ..." buttons) ---------- */
+
+.object-tools a:link,
+.object-tools a:visited {
+  border-radius: 999px;
+  padding: 9px 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.object-tools a:hover {
+  transform: translateY(-2px);
+}
+
+/* ---------- 12. FORMS ---------- */
+
+fieldset.module {
+  background: var(--orebz-card);
+}
+
+.form-row {
+  padding: 18px 20px;
+  border-bottom: 1px solid var(--hairline-color);
+}
+
+label,
+.form-row label {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.help,
+.help-tooltip,
+form .form-row p.help {
+  color: var(--body-quiet-color);
+  font-size: 0.8rem;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="number"],
+input[type="tel"],
+input[type="date"],
+input[type="time"],
+input[type="file"],
+textarea,
+select {
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: var(--orebz-card);
+  color: var(--body-fg);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+input[type="time"]:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--orebz-accent);
+  box-shadow: 0 0 0 4px rgba(194, 65, 12, 0.16);
+}
+
+/* ---------- 13. BUTTONS ---------- */
+
+input[type="submit"],
+button,
+.button,
+.submit-row input,
+a.button {
+  border-radius: 999px;
+  padding: 11px 24px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+
+input[type="submit"]:hover,
+.button:hover,
+a.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(194, 65, 12, 0.25);
+}
+
+input[type="submit"]:active,
+button:active,
+.button:active {
+  transform: translateY(0);
+}
+
+.submit-row {
+  background: var(--orebz-card);
+  border: 1px solid var(--hairline-color);
+  border-radius: var(--orebz-radius);
+  padding: 16px 20px;
+  box-shadow: var(--orebz-shadow);
+}
+
+.submit-row a.deletelink:link,
+.submit-row a.deletelink:visited {
+  border-radius: 999px;
+  padding: 11px 24px;
+}
+
+/* ---------- 14. MESSAGES ---------- */
+
+ul.messagelist li {
+  border-radius: 12px;
+  margin: 0 0 12px;
+  padding: 14px 18px 14px 52px;
+  font-weight: 600;
+  animation: orebz-rise 0.4s ease both;
+}
+
+/* ---------- 15. LOGIN PAGE (centred card) ---------- */
+
+body.login {
+  background: radial-gradient(
+      circle at 20% 10%,
+      rgba(194, 65, 12, 0.25),
+      transparent 45%
+    ),
+    linear-gradient(135deg, #171717 0%, #2b1409 100%);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login #container {
+  width: 100%;
+  max-width: 420px;
+  min-height: 0;
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.5);
+  background: var(--orebz-card);
+  animation: orebz-rise 0.5s ease both;
+}
+
+.login #header {
+  position: static;
+  justify-content: center;
+  text-align: center;
+  padding: 30px 24px;
+  border-bottom: 3px solid var(--orebz-accent);
+}
+
+.login .main > .content {
+  max-width: none;
+  animation: none;
+}
+
+.login #content {
+  padding: 28px 32px 32px;
+}
+
+.login .form-row {
+  border-bottom: none;
+  padding: 10px 0;
+}
+
+.login .form-row input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.login .submit-row {
+  border: none;
+  box-shadow: none;
+  background: transparent;
+  padding: 16px 0 0;
+}
+
+.login .submit-row input {
+  width: 100%;
+  padding: 14px 24px;
+}
+
+/* ---------- 16. FOOTER ---------- */
+
+#footer {
+  padding: 24px;
+  text-align: center;
+  color: var(--body-quiet-color);
+  font-size: 0.8rem;
+}
+
+/* ---------- 17. MOBILE ---------- */
+
+@media (max-width: 767px) {
+  #header {
+    padding: 12px 16px;
+  }
+
+  div.breadcrumbs {
+    padding: 14px 16px 0;
+  }
+
+  #content {
+    padding: 18px 16px 36px;
+  }
+
+  #content > h1 {
+    font-size: 1.5rem;
+  }
+
+  #changelist {
+    padding: 12px;
+  }
+
+  #changelist-search input[type="text"] {
+    min-width: 0;
+    width: 100%;
+  }
+
+  #result_list img {
+    max-width: 56px;
+  }
+}

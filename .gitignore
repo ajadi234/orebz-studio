@@ -1,0 +1,29 @@
+
+# Python and Django
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Local database
+*.sqlite3
+
+# Uploaded media
+backend/media/
+
+# Node dependencies
+node_modules/
+
+# Build files
+dist/
+frontend/dist/
+
+# Editor files
+.vscode/
+.idea/
+.DS_Store

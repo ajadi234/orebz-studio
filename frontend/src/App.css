@@ -1,0 +1,19 @@
+
+#root {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.website {
+  width: 100%;
+  min-height: 100vh;
+  overflow: visible;
+}
+
+section[id] {
+  scroll-margin-top: 20px;
+}
+
+a {
+  -webkit-tap-highlight-color: transparent;
+}
