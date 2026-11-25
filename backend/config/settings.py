@@ -6,9 +6,10 @@ Django settings for config project.
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+11
 # LOAD ENVIRONMENT VARIABLES
 load_dotenv(BASE_DIR / ".env")
 
@@ -95,8 +96,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 # DATABASE}
-# DATABASE
-import dj_database_url
+
 
 DATABASES = {
     "default": dj_database_url.config(
@@ -104,7 +104,6 @@ DATABASES = {
         conn_max_age=600,
     )
 }
-
 # PASSWORD VALIDATION
 AUTH_PASSWORD_VALIDATORS = [
     {

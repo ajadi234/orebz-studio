@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import "./ClientGalleries.css";
 
-const API_URL = "http://127.0.0.1:8000/api/galleries";
+const API_URL = `${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/galleries`;
 
 function ClientGalleries() {
   const [email, setEmail] = useState("");
