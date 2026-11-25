@@ -1,62 +1,48 @@
-
 import sharp from "sharp";
 import fs from "fs";
 import path from "path";
 
+// Folder with your original photos
 const inputDir = "./src/assets/images";
 
+// New folder where the compressed WebP copies will be saved
+const outputDir = "./src/assets/images-optimized";
+
+// Max width in pixels (1920 is good for full-screen hero photos)
 const MAX_WIDTH = 1920;
-const QUALITY = 78;
 
-async function optimizeImages() {
-  const files = fs.readdirSync(inputDir);
+fs.mkdirSync(outputDir, { recursive: true });
 
-  let totalBefore = 0;
-  let totalAfter = 0;
-  let count = 0;
+let totalBefore = 0;
+let totalAfter = 0;
 
-  console.log("Starting Orebz Studio image optimization...\n");
+for (const file of fs.readdirSync(inputDir)) {
+  if (!/\.(jpe?g|png)$/i.test(file)) continue;
 
-  for (const file of files) {
-    if (!/\.(jpg|jpeg|png)$/i.test(file)) continue;
+  const inputPath = path.join(inputDir, file);
+  const name = path.parse(file).name;
+  const outputPath = path.join(outputDir, `${name}.webp`);
 
-    const inputPath = path.join(inputDir, file);
-    const name = path.parse(file).name;
+  await sharp(inputPath)
+    .rotate() // keeps phone photos the right way up
+    .resize({ width: MAX_WIDTH, withoutEnlargement: true })
+    .webp({ quality: 80 })
+    .toFile(outputPath);
 
-    // Save WebP beside the original image
-    const outputPath = path.join(inputDir, `${name}.webp`);
+  const before = fs.statSync(inputPath).size;
+  const after = fs.statSync(outputPath).size;
+  totalBefore += before;
+  totalAfter += after;
 
-    const before = fs.statSync(inputPath).size;
-
-    await sharp(inputPath)
-      .rotate()
-      .resize({
-        width: MAX_WIDTH,
-        withoutEnlargement: true,
-      })
-      .webp({
-        quality: QUALITY,
-        effort: 6,
-      })
-      .toFile(outputPath);
-
-    const after = fs.statSync(outputPath).size;
-
-    totalBefore += before;
-    totalAfter += after;
-    count++;
-
-    console.log(
-      `${file}: ${(before / 1024 / 1024).toFixed(2)} MB`
-      + ` -> ${(after / 1024).toFixed(0)} KB`
-    );
-  }
-
-  console.log("\n================================");
-  console.log(`Images optimized: ${count}`);
-  console.log(`Original size: ${(totalBefore / 1024 / 1024).toFixed(2)} MB`);
-  console.log(`New size: ${(totalAfter / 1024 / 1024).toFixed(2)} MB`);
-  console.log("Optimization completed!");
+  console.log(
+    `Done: ${file}  ${(before / 1024 / 1024).toFixed(1)} MB -> ${(
+      after /
+      1024 /
+      1024
+    ).toFixed(2)} MB`
+  );
 }
 
-optimizeImages().catch(console.error);
+console.log("----------------------------------------");
+console.log(`Before: ${(totalBefore / 1024 / 1024).toFixed(1)} MB`);
+console.log(`After:  ${(totalAfter / 1024 / 1024).toFixed(1)} MB`);

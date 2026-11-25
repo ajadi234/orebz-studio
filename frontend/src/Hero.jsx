@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Hero.css";
@@ -7,8 +6,12 @@ import "./Hero.css";
 // OREBZ STUDIO CONTACT DETAILS
 // ======================================
 
+// Replace this with the photographer's real WhatsApp number.
 const WHATSAPP_NUMBER = "2340000000000";
+
 const INSTAGRAM_LINK = "https://www.instagram.com/orebz_studio/";
+
+// Address of the Django backend (change this when you deploy).
 const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
@@ -33,6 +36,8 @@ const photos = Object.entries(imageFiles).map(([path, image]) => ({
   image,
 }));
 
+// Prefers the optimized .webp version of a photo.
+// If no .webp exists yet, it falls back to the original file name.
 const getPhoto = (filename) => {
   const base = filename.replace(/\.[^.]+$/, "");
   const match =
@@ -181,6 +186,7 @@ const portfolioItems = [
     category: "PORTRAITS",
     image: getPhoto("portrait-04.jpg"),
   },
+  // NEW CARD: change the title, category or file name to whatever you like
   {
     title: "Wedding Moments",
     category: "WEDDINGS",
@@ -227,6 +233,7 @@ function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [livePhotos, setLivePhotos] = useState([]);
 
+  // How many portfolio cards are visible. "Show more" adds 9 each time.
   const [visibleCount, setVisibleCount] = useState(9);
 
   // Load the newest photos uploaded through the admin page.
@@ -247,9 +254,10 @@ function Hero() {
     };
   }, []);
 
+  // Hero slides: photos marked "Show in hero" first, then the built-in slides.
   const liveSlides = livePhotos
     .filter((photo) => photo.show_in_hero)
-    .slice(0, 5)
+    .slice(0, 5) // only the 5 newest photos join the big slideshow
     .map((photo, index) => ({
       ...slides[index % slides.length],
       image: photo.image,
@@ -257,6 +265,7 @@ function Hero() {
 
   const activeSlides = [...liveSlides, ...slides];
 
+  // Portfolio cards: uploaded photos first, then the built-in ones.
   const liveItems = livePhotos.map((photo) => ({
     key: `live-${photo.id}`,
     title: photo.title,
@@ -294,6 +303,8 @@ function Hero() {
 
   const slide = activeSlides[currentSlide] || activeSlides[0];
 
+  // Only the current slide and its two neighbours load their photo.
+  // This stops the browser from downloading every hero photo at once.
   const nextIndex = (currentSlide + 1) % activeSlides.length;
   const prevIndex =
     (currentSlide - 1 + activeSlides.length) % activeSlides.length;

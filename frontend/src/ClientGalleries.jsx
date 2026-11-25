@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import "./ClientGalleries.css";
 
-const API_URL = `${import.meta.env.VITE_API_URL || "http://127.0.0.1:8000"}/api/galleries`;
+const API_URL =
+  "https://orebz-studio.onrender.com/api/galleries";
 
 function ClientGalleries() {
   const [email, setEmail] = useState("");
@@ -23,15 +24,18 @@ function ClientGalleries() {
     setSearchedEmail(email.trim().toLowerCase());
 
     try {
-      const response = await fetch(`${API_URL}/request-login/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: email.trim(),
-        }),
-      });
+      const response = await fetch(
+        `${API_URL}/request-login/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: email.trim(),
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -41,7 +45,9 @@ function ClientGalleries() {
       }
 
       if (!response.ok) {
-        throw new Error(data.message || "Something went wrong.");
+        throw new Error(
+          data.message || "Something went wrong."
+        );
       }
 
       if (data.found && data.ready === false) {
@@ -78,7 +84,8 @@ function ClientGalleries() {
 
         if (!response.ok) {
           throw new Error(
-            data.message || "Your login link is invalid or expired."
+            data.message ||
+            "Your login link is invalid or expired."
           );
         }
 
@@ -135,7 +142,9 @@ function ClientGalleries() {
           </p>
 
           <form onSubmit={handleSubmit} className="gallery-form">
-            <label htmlFor="client-email">Email Address</label>
+            <label htmlFor="client-email">
+              Email Address
+            </label>
 
             <input
               id="client-email"
@@ -218,9 +227,7 @@ function ClientGalleries() {
 
           <h1>You're almost there.</h1>
 
-          <p className="gallery-intro">
-            {message}
-          </p>
+          <p className="gallery-intro">{message}</p>
 
           <a href="/" className="gallery-back">
             ← Back to website
@@ -272,7 +279,10 @@ function ClientGalleries() {
               <div className="client-photo-grid">
                 {gallery.photos?.length > 0 ? (
                   gallery.photos.map((photo) => (
-                    <div className="client-photo" key={photo.id}>
+                    <div
+                      className="client-photo"
+                      key={photo.id}
+                    >
                       <img
                         src={photo.image}
                         alt={photo.caption || gallery.title}

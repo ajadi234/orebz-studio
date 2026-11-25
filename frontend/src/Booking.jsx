@@ -3,10 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Booking.css";
 
-// ===================================
 // AUTOMATICALLY LOAD EXISTING PHOTOS
-// ===================================
-
 const bookingImages = Object.values(
   import.meta.glob(
     "./assets/images/*.{jpg,jpeg,png,webp}",
@@ -19,10 +16,6 @@ const bookingImages = Object.values(
 );
 
 const bookingBackground = bookingImages[0];
-
-// ===================================
-// BOOKING COMPONENT
-// ===================================
 
 function Booking() {
   const [formData, setFormData] = useState({
@@ -55,7 +48,7 @@ function Booking() {
 
     try {
       const response = await fetch(
-        "http://127.0.0.1:8000/api/bookings/",
+        "https://orebz-studio.onrender.com/api/bookings/",
         {
           method: "POST",
           headers: {
@@ -112,8 +105,6 @@ function Booking() {
           : "none",
       }}
     >
-      {/* NAVIGATION */}
-
       <nav className="booking-nav">
         <Link to="/" className="booking-logo">
           OREBZ STUDIO<span>.</span>
@@ -124,10 +115,7 @@ function Booking() {
         </Link>
       </nav>
 
-      {/* BOOKING CONTENT */}
-
       <section className="booking-container">
-
         <div className="booking-heading">
           <p className="booking-eyebrow">
             LET'S CREATE SOMETHING BEAUTIFUL
@@ -144,13 +132,9 @@ function Booking() {
           </p>
         </div>
 
-        {/* BOOKING FORM */}
-
         <form className="booking-form" onSubmit={handleSubmit}>
-
           <div className="booking-field">
             <label>Full Name</label>
-
             <input
               type="text"
               name="full_name"
@@ -163,7 +147,6 @@ function Booking() {
 
           <div className="booking-field">
             <label>Email Address</label>
-
             <input
               type="email"
               name="email"
@@ -176,7 +159,6 @@ function Booking() {
 
           <div className="booking-field">
             <label>Phone Number</label>
-
             <input
               type="tel"
               name="phone"
@@ -189,7 +171,6 @@ function Booking() {
 
           <div className="booking-field">
             <label>Photography Service</label>
-
             <select
               name="service"
               value={formData.service}
@@ -207,7 +188,6 @@ function Booking() {
 
           <div className="booking-field">
             <label>Preferred Date</label>
-
             <input
               type="date"
               name="preferred_date"
@@ -220,7 +200,6 @@ function Booking() {
 
           <div className="booking-field">
             <label>Event Location</label>
-
             <input
               type="text"
               name="location"
@@ -233,7 +212,6 @@ function Booking() {
 
           <div className="booking-field booking-message">
             <label>Additional Details</label>
-
             <textarea
               name="message"
               placeholder="Tell us more about your photography needs..."
@@ -260,11 +238,8 @@ function Booking() {
               ? "Submitting..."
               : "Submit Booking Request ↗"}
           </button>
-
         </form>
       </section>
-
-      {/* FOOTER */}
 
       <footer className="booking-footer">
         <div className="booking-socials">
