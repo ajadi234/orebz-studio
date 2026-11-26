@@ -6,7 +6,7 @@ from .models import PortfolioPhoto
 
 # How many photos one click imports. Small on purpose: a free Render server
 # is slow and gives up on requests that take too long.
-BATCH_SIZE = 3
+BATCH_SIZE = 1
 
 # (file name without extension, title, category, show in the big slideshow)
 # The order here is the order the photos appear on the website.

@@ -1,3 +1,4 @@
+
 from django.conf import settings
 from django.contrib import admin, messages
 from django.core.exceptions import PermissionDenied
@@ -11,7 +12,6 @@ from .models import PortfolioPhoto
 
 @admin.register(PortfolioPhoto)
 class PortfolioPhotoAdmin(admin.ModelAdmin):
-    # Adds the "Import original website photos" button to the list page
     change_list_template = "admin/portfolio/portfoliophoto/change_list.html"
 
     list_display = (
@@ -23,6 +23,7 @@ class PortfolioPhotoAdmin(admin.ModelAdmin):
         "order",
         "size_kb",
     )
+
     list_display_links = ("preview", "title")
     list_editable = ("category", "show_in_hero", "is_published", "order")
     list_filter = ("category", "show_in_hero", "is_published")
@@ -40,26 +41,32 @@ class PortfolioPhotoAdmin(admin.ModelAdmin):
         "preview",
         "size_kb",
     )
+
     readonly_fields = ("preview", "size_kb")
 
     @admin.display(description="Preview")
     def preview(self, obj):
         source = obj.thumbnail or obj.image
-        if source:
-            return format_html(
-                '<img src="{}" style="width:80px;height:60px;'
-                'object-fit:cover;border-radius:8px;" alt="">',
-                source.url,
-            )
-        return "-"
+
+        if not source or not source.name:
+            return "-"
+
+        try:
+            image_url = source.url
+        except Exception:
+            return "Image unavailable"
+
+        return format_html(
+            '<img src="{}" style="width:80px;height:60px;'
+            'object-fit:cover;border-radius:8px;" alt="">',
+            image_url,
+        )
 
     @admin.display(description="Size")
     def size_kb(self, obj):
         if obj.file_size_kb:
             return f"{obj.file_size_kb} KB"
         return "-"
-
-    # ---- "Import original website photos" button ----
 
     def get_urls(self):
         custom_urls = [
@@ -79,17 +86,23 @@ class PortfolioPhotoAdmin(admin.ModelAdmin):
         result = import_existing_photos(folder, limit=BATCH_SIZE)
 
         if result["added"]:
-            messages.success(request, f"Imported {result['added']} photo(s).")
+            messages.success(
+                request,
+                f"Imported {result['added']} photo(s).",
+            )
 
         if result["remaining"]:
             messages.info(
                 request,
                 f"{result['remaining']} more to go. "
-                "Click \"Import original website photos\" again.",
+                'Click "Import original website photos" again.',
             )
-        elif not result["missing"] and (result["added"] or result["skipped"]):
+        elif not result["missing"] and (
+            result["added"] or result["skipped"]
+        ):
             messages.success(
-                request, "All the original website photos are in the admin."
+                request,
+                "All the original website photos are in the admin.",
             )
 
         if result["missing"]:
