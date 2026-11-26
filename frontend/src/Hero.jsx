@@ -231,22 +231,28 @@ const services = [
 
 function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [livePhotos, setLivePhotos] = useState([]);
+  // null = still loading, [] = loaded but the admin has no photos
+  const [livePhotos, setLivePhotos] = useState(null);
+  const [apiFailed, setApiFailed] = useState(false);
 
   // How many portfolio cards are visible. "Show more" adds 9 each time.
   const [visibleCount, setVisibleCount] = useState(9);
 
-  // Load the newest photos uploaded through the admin page.
+  // Load the photos managed in the admin page.
   useEffect(() => {
     let cancelled = false;
 
     fetch(`${API_URL}/api/portfolio/`)
-      .then((response) => (response.ok ? response.json() : []))
+      .then((response) => {
+        if (!response.ok) throw new Error("Could not load photos");
+        return response.json();
+      })
       .then((data) => {
-        if (!cancelled && Array.isArray(data)) setLivePhotos(data);
+        if (!cancelled) setLivePhotos(Array.isArray(data) ? data : []);
       })
       .catch(() => {
-        // If the backend is offline, the built-in photos still show.
+        // Backend unreachable: fall back to the built-in sample photos.
+        if (!cancelled) setApiFailed(true);
       });
 
     return () => {
@@ -254,32 +260,39 @@ function Hero() {
     };
   }, []);
 
-  // Hero slides: photos marked "Show in hero" first, then the built-in slides.
-  const liveSlides = livePhotos
-    .filter((photo) => photo.show_in_hero)
-    .slice(0, 5) // only the 5 newest photos join the big slideshow
-    .map((photo, index) => ({
-      ...slides[index % slides.length],
-      image: photo.image,
-    }));
+  // The website shows exactly what is in the admin. The built-in photos are
+  // only used when the backend cannot be reached at all.
+  const useBuiltIn = apiFailed;
+  const isLoading = !useBuiltIn && livePhotos === null;
+  const adminPhotos = livePhotos || [];
 
-  const activeSlides = [...liveSlides, ...slides];
+  // Hero slideshow: photos ticked "Show in hero" (up to 8).
+  const flagged = adminPhotos.filter((photo) => photo.show_in_hero);
+  const heroPhotos = (flagged.length ? flagged : adminPhotos).slice(0, 8);
 
-  // Portfolio cards: uploaded photos first, then the built-in ones.
-  const liveItems = livePhotos.map((photo) => ({
-    key: `live-${photo.id}`,
-    title: photo.title,
-    category: photo.category,
-    image: photo.thumbnail || photo.image,
+  const adminSlides = heroPhotos.map((photo, index) => ({
+    ...slides[index % slides.length],
+    image: photo.image,
   }));
 
-  const allPortfolioItems = [
-    ...liveItems,
-    ...portfolioItems.map((item, index) => ({
-      ...item,
-      key: `static-${index}`,
-    })),
-  ];
+  const activeSlides = useBuiltIn
+    ? slides
+    : adminSlides.length
+    ? adminSlides
+    : [{ ...slides[0], image: "" }]; // dark background while loading
+
+  // Portfolio cards
+  const allPortfolioItems = useBuiltIn
+    ? portfolioItems.map((item, index) => ({
+        ...item,
+        key: `static-${index}`,
+      }))
+    : adminPhotos.map((photo) => ({
+        key: `live-${photo.id}`,
+        title: photo.title,
+        category: photo.category,
+        image: photo.thumbnail || photo.image,
+      }));
 
   // Automatically change slides every 6 seconds.
   useEffect(() => {
@@ -288,6 +301,12 @@ function Hero() {
     }, 6000);
 
     return () => clearInterval(timer);
+  }, [activeSlides.length]);
+
+  // When the number of slides changes (photos finished loading), start again
+  // from the first slide.
+  useEffect(() => {
+    setCurrentSlide(0);
   }, [activeSlides.length]);
 
   const nextSlide = () => {
@@ -475,6 +494,15 @@ function Hero() {
         </div>
 
         <div className="portfolio-grid">
+          {isLoading &&
+            [0, 1, 2, 3, 4, 5].map((n) => (
+              <article className="portfolio-card" key={`loading-${n}`}>
+                <div className="portfolio-image">
+                  <div className="image-placeholder">Orebz Studio</div>
+                </div>
+              </article>
+            ))}
+
           {allPortfolioItems.slice(0, visibleCount).map((item, index) => (
             <article className="portfolio-card" key={item.key}>
               <div className="portfolio-image">
@@ -500,6 +528,12 @@ function Hero() {
             </article>
           ))}
         </div>
+
+        {!isLoading && allPortfolioItems.length === 0 && (
+          <p style={{ textAlign: "center", opacity: 0.7 }}>
+            New work is coming soon.
+          </p>
+        )}
 
         <div className="section-button-wrapper">
           {visibleCount < allPortfolioItems.length && (

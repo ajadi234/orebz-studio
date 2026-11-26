@@ -1,11 +1,19 @@
-from django.contrib import admin
+from django.conf import settings
+from django.contrib import admin, messages
+from django.core.exceptions import PermissionDenied
+from django.shortcuts import redirect
+from django.urls import path
 from django.utils.html import format_html
 
+from .importer import BATCH_SIZE, import_existing_photos
 from .models import PortfolioPhoto
 
 
 @admin.register(PortfolioPhoto)
 class PortfolioPhotoAdmin(admin.ModelAdmin):
+    # Adds the "Import original website photos" button to the list page
+    change_list_template = "admin/portfolio/portfoliophoto/change_list.html"
+
     list_display = (
         "preview",
         "title",
@@ -47,9 +55,48 @@ class PortfolioPhotoAdmin(admin.ModelAdmin):
 
     @admin.display(description="Size")
     def size_kb(self, obj):
-        if obj.image:
-            try:
-                return f"{obj.image.size / 1024:.0f} KB"
-            except (FileNotFoundError, ValueError):
-                return "-"
+        if obj.file_size_kb:
+            return f"{obj.file_size_kb} KB"
         return "-"
+
+    # ---- "Import original website photos" button ----
+
+    def get_urls(self):
+        custom_urls = [
+            path(
+                "import-existing/",
+                self.admin_site.admin_view(self.import_existing_view),
+                name="portfolio_portfoliophoto_import_existing",
+            ),
+        ]
+        return custom_urls + super().get_urls()
+
+    def import_existing_view(self, request):
+        if not self.has_add_permission(request):
+            raise PermissionDenied
+
+        folder = settings.BASE_DIR / "seed_photos"
+        result = import_existing_photos(folder, limit=BATCH_SIZE)
+
+        if result["added"]:
+            messages.success(request, f"Imported {result['added']} photo(s).")
+
+        if result["remaining"]:
+            messages.info(
+                request,
+                f"{result['remaining']} more to go. "
+                "Click \"Import original website photos\" again.",
+            )
+        elif not result["missing"] and (result["added"] or result["skipped"]):
+            messages.success(
+                request, "All the original website photos are in the admin."
+            )
+
+        if result["missing"]:
+            messages.warning(
+                request,
+                "These files were not found in the backend/seed_photos "
+                "folder: " + ", ".join(result["missing"]),
+            )
+
+        return redirect("admin:portfolio_portfoliophoto_changelist")

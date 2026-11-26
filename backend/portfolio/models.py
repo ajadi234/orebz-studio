@@ -1,9 +1,14 @@
+import logging
 from io import BytesIO
 from pathlib import Path
 
 from django.core.files.base import ContentFile
 from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
 from PIL import Image, ImageOps
+
+logger = logging.getLogger(__name__)
 
 
 def make_webp(source_file, max_width, max_kb, name):
@@ -68,6 +73,9 @@ class PortfolioPhoto(models.Model):
     thumbnail = models.ImageField(
         upload_to="portfolio/thumbs/", blank=True, editable=False
     )
+    # Size of the compressed photo, saved at upload time so the admin list
+    # does not have to ask the storage service for it on every page load.
+    file_size_kb = models.PositiveIntegerField(default=0, editable=False)
     show_in_hero = models.BooleanField(
         default=False,
         help_text="Tick to also show this photo in the big slideshow at the top.",
@@ -99,7 +107,19 @@ class PortfolioPhoto(models.Model):
             big = make_webp(source, 1920, 350, f"{base}.webp")
             small = make_webp(source, 800, 90, f"{base}-thumb.webp")
 
+            self.file_size_kb = round(big.size / 1024)
             self.image.save(f"{base}.webp", big, save=False)
             self.thumbnail.save(f"{base}-thumb.webp", small, save=False)
 
         super().save(*args, **kwargs)
+
+
+@receiver(post_delete, sender=PortfolioPhoto)
+def remove_photo_files(sender, instance, **kwargs):
+    """When a photo is deleted in the admin, delete its files from storage too."""
+    for field in (instance.image, instance.thumbnail):
+        if field and field.name:
+            try:
+                field.delete(save=False)
+            except Exception:  # never block a delete because storage is unreachable
+                logger.warning("Could not remove %s from storage", field.name)

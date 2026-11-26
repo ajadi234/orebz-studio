@@ -5,7 +5,7 @@ from pathlib import Path
 
 from django.conf import settings
 from django.core.mail import send_mail
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
 from django.urls import reverse
 
 from rest_framework.views import APIView
@@ -92,7 +92,7 @@ class GalleryLoginRequestView(APIView):
             email__iexact=email
         ).delete()
 
-        # Create a new download token. It expires after 24 hours.
+        # Create a new download token.
         download_token = GalleryDownloadToken.objects.create(
             email=email
         )
@@ -213,12 +213,92 @@ class GalleryDownloadView(APIView):
             token=token
         ).first()
 
+        # Show a proper webpage instead of a technical API error.
         if not download_token or not download_token.is_valid():
-            return Response(
-                {
-                    "message": "This download link is invalid or has expired. Please request a new one."
-                },
-                status=status.HTTP_400_BAD_REQUEST
+            return HttpResponse(
+                """
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <meta name="robots" content="noindex, nofollow">
+                    <title>Link Expired | Orebz Studio</title>
+                    <style>
+                        * { box-sizing: border-box; }
+
+                        body {
+                            margin: 0;
+                            min-height: 100vh;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            padding: 20px;
+                            background: #f7f7f7;
+                            color: #222;
+                            font-family: Arial, sans-serif;
+                            text-align: center;
+                        }
+
+                        .container {
+                            width: 100%;
+                            max-width: 440px;
+                            padding: 45px 28px;
+                            background: white;
+                            border-radius: 12px;
+                            box-shadow: 0 5px 25px rgba(0,0,0,0.06);
+                        }
+
+                        .icon {
+                            font-size: 48px;
+                            margin-bottom: 15px;
+                        }
+
+                        h1 {
+                            font-size: 26px;
+                            margin-bottom: 14px;
+                        }
+
+                        p {
+                            color: #666;
+                            font-size: 15px;
+                            line-height: 1.8;
+                        }
+
+                        a {
+                            display: inline-block;
+                            margin-top: 22px;
+                            padding: 14px 25px;
+                            background: #222;
+                            color: white;
+                            text-decoration: none;
+                            border-radius: 5px;
+                            font-size: 14px;
+                        }
+
+                        a:hover {
+                            background: #444;
+                        }
+                    </style>
+                </head>
+                <body>
+                    <main class="container">
+                        <div class="icon">&#9203;</div>
+                        <h1>Sorry, your link has expired</h1>
+                        <p>
+                            This gallery download link is no longer valid.
+                            Please visit Orebz Studio to request a new
+                            download link.
+                        </p>
+                        <a href="https://orebz-studio.netlify.app/">
+                            Visit Orebz Studio
+                        </a>
+                    </main>
+                </body>
+                </html>
+                """,
+                status=404,
+                content_type="text/html; charset=utf-8"
             )
 
         galleries = Gallery.objects.filter(
@@ -255,10 +335,7 @@ class GalleryDownloadView(APIView):
 
                         original_name = Path(photo.image.name).name
 
-                        # Keep photographs organized by gallery.
-                        folder_name = (
-                            f"{gallery.pk}_{gallery.title}"
-                        )
+                        folder_name = f"{gallery.pk}_{gallery.title}"
 
                         zip_filename = (
                             f"{folder_name}/{photo.pk}_{original_name}"
