@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./Hero.css";
@@ -6,48 +7,42 @@ import "./Hero.css";
 // OREBZ STUDIO CONTACT DETAILS
 // ======================================
 
-// Replace this with the photographer's real WhatsApp number.
-const WHATSAPP_NUMBER = "2340000000000";
+// Replace with the real WhatsApp number.
+// Use international format without + or spaces.
+const WHATSAPP_NUMBER = "2349027676110";
 
 const INSTAGRAM_LINK = "https://www.instagram.com/orebz_studio/";
-
-// Address of the Django backend (change this when you deploy).
-const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
 const whatsappLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
   "Hello Orebz Studio, I would like to make an enquiry."
 )}`;
 
 // ======================================
-// LOAD PHOTOS FROM THE IMAGES FOLDER
+// LOAD OPTIMIZED WEBP PHOTOS ONLY
 // ======================================
 
-const imageFiles = import.meta.glob(
-  "./assets/images/*.{jpg,jpeg,png,webp}",
-  {
-    eager: true,
-    query: "?url",
-    import: "default",
-  }
-);
+const imageFiles = import.meta.glob("./assets/images/*.webp", {
+  eager: true,
+  query: "?url",
+  import: "default",
+});
 
 const photos = Object.entries(imageFiles).map(([path, image]) => ({
   name: path.split("/").pop(),
   image,
 }));
 
-// Prefers the optimized .webp version of a photo.
-// If no .webp exists yet, it falls back to the original file name.
 const getPhoto = (filename) => {
   const base = filename.replace(/\.[^.]+$/, "");
-  const match =
-    photos.find((photo) => photo.name === `${base}.webp`) ||
-    photos.find((photo) => photo.name === filename);
+  const match = photos.find(
+    (photo) => photo.name === `${base}.webp`
+  );
+
   return match?.image || "";
 };
 
 // ======================================
-// HERO SLIDESHOW - 11 PHOTOS
+// HERO SLIDESHOW
 // ======================================
 
 const slides = [
@@ -186,7 +181,6 @@ const portfolioItems = [
     category: "PORTRAITS",
     image: getPhoto("portrait-04.jpg"),
   },
-  // NEW CARD: change the title, category or file name to whatever you like
   {
     title: "Wedding Moments",
     category: "WEDDINGS",
@@ -231,102 +225,45 @@ const services = [
 
 function Hero() {
   const [currentSlide, setCurrentSlide] = useState(0);
-  // null = still loading, [] = loaded but the admin has no photos
-  const [livePhotos, setLivePhotos] = useState(null);
-  const [apiFailed, setApiFailed] = useState(false);
-
-  // How many portfolio cards are visible. "Show more" adds 9 each time.
-  const [visibleCount, setVisibleCount] = useState(9);
-
-  // Load the photos managed in the admin page.
-  useEffect(() => {
-    let cancelled = false;
-
-    fetch(`${API_URL}/api/portfolio/`)
-      .then((response) => {
-        if (!response.ok) throw new Error("Could not load photos");
-        return response.json();
-      })
-      .then((data) => {
-        if (!cancelled) setLivePhotos(Array.isArray(data) ? data : []);
-      })
-      .catch(() => {
-        // Backend unreachable: fall back to the built-in sample photos.
-        if (!cancelled) setApiFailed(true);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  // The website shows exactly what is in the admin. The built-in photos are
-  // only used when the backend cannot be reached at all.
-  const useBuiltIn = apiFailed;
-  const isLoading = !useBuiltIn && livePhotos === null;
-  const adminPhotos = livePhotos || [];
-
-  // Hero slideshow: photos ticked "Show in hero" (up to 8).
-  const flagged = adminPhotos.filter((photo) => photo.show_in_hero);
-  const heroPhotos = (flagged.length ? flagged : adminPhotos).slice(0, 8);
-
-  const adminSlides = heroPhotos.map((photo, index) => ({
-    ...slides[index % slides.length],
-    image: photo.image,
-  }));
-
-  const activeSlides = useBuiltIn
-    ? slides
-    : adminSlides.length
-    ? adminSlides
-    : [{ ...slides[0], image: "" }]; // dark background while loading
-
-  // Portfolio cards
-  const allPortfolioItems = useBuiltIn
-    ? portfolioItems.map((item, index) => ({
-        ...item,
-        key: `static-${index}`,
-      }))
-    : adminPhotos.map((photo) => ({
-        key: `live-${photo.id}`,
-        title: photo.title,
-        category: photo.category,
-        image: photo.thumbnail || photo.image,
-      }));
 
   // Automatically change slides every 6 seconds.
   useEffect(() => {
     const timer = setInterval(() => {
-      setCurrentSlide((previous) => (previous + 1) % activeSlides.length);
+      setCurrentSlide((previous) => (previous + 1) % slides.length);
     }, 6000);
 
     return () => clearInterval(timer);
-  }, [activeSlides.length]);
+  }, []);
 
-  // When the number of slides changes (photos finished loading), start again
-  // from the first slide.
+  // Preload the current and next hero photographs.
+  // This helps the next slide appear more quickly.
   useEffect(() => {
-    setCurrentSlide(0);
-  }, [activeSlides.length]);
+    const nextIndex = (currentSlide + 1) % slides.length;
+
+    [currentSlide, nextIndex].forEach((index) => {
+      const imageUrl = slides[index].image;
+
+      if (imageUrl) {
+        const image = new Image();
+        image.src = imageUrl;
+      }
+    });
+  }, [currentSlide]);
 
   const nextSlide = () => {
-    setCurrentSlide((previous) => (previous + 1) % activeSlides.length);
+    setCurrentSlide((previous) => (previous + 1) % slides.length);
   };
 
   const previousSlide = () => {
     setCurrentSlide(
-      (previous) =>
-        (previous - 1 + activeSlides.length) % activeSlides.length
+      (previous) => (previous - 1 + slides.length) % slides.length
     );
   };
 
-  const slide = activeSlides[currentSlide] || activeSlides[0];
+  const slide = slides[currentSlide];
 
-  // Only the current slide and its two neighbours load their photo.
-  // This stops the browser from downloading every hero photo at once.
-  const nextIndex = (currentSlide + 1) % activeSlides.length;
-  const prevIndex =
-    (currentSlide - 1 + activeSlides.length) % activeSlides.length;
+  const nextIndex = (currentSlide + 1) % slides.length;
+  const prevIndex = (currentSlide - 1 + slides.length) % slides.length;
 
   return (
     <main className="orebz-site">
@@ -376,7 +313,7 @@ function Hero() {
       {/* HOME / AUTOMATIC HERO SLIDER */}
 
       <section className="hero-slider" id="home">
-        {activeSlides.map((item, index) => {
+        {slides.map((item, index) => {
           const shouldLoad =
             index === currentSlide ||
             index === nextIndex ||
@@ -384,7 +321,7 @@ function Hero() {
 
           return (
             <div
-              key={index}
+              key={item.title}
               className={`hero-slide ${
                 currentSlide === index ? "active" : ""
               }`}
@@ -438,9 +375,9 @@ function Hero() {
         </button>
 
         <div className="slider-dots">
-          {activeSlides.map((item, index) => (
+          {slides.map((item, index) => (
             <button
-              key={index}
+              key={item.title}
               className={`slider-dot ${
                 currentSlide === index ? "active" : ""
               }`}
@@ -453,7 +390,7 @@ function Hero() {
         <div className="hero-bottom-note">
           <span>
             {String(currentSlide + 1).padStart(2, "0")} —{" "}
-            {String(activeSlides.length).padStart(2, "0")}
+            {String(slides.length).padStart(2, "0")}
           </span>
           <span>CAPTURING MOMENTS. CREATING MEMORIES.</span>
         </div>
@@ -476,7 +413,7 @@ function Hero() {
         </p>
       </section>
 
-      {/* PORTFOLIO */}
+      {/* PORTFOLIO / CAPTURED MOMENTS */}
 
       <section className="portfolio-section" id="portfolio">
         <div className="section-heading">
@@ -494,17 +431,8 @@ function Hero() {
         </div>
 
         <div className="portfolio-grid">
-          {isLoading &&
-            [0, 1, 2, 3, 4, 5].map((n) => (
-              <article className="portfolio-card" key={`loading-${n}`}>
-                <div className="portfolio-image">
-                  <div className="image-placeholder">Orebz Studio</div>
-                </div>
-              </article>
-            ))}
-
-          {allPortfolioItems.slice(0, visibleCount).map((item, index) => (
-            <article className="portfolio-card" key={item.key}>
+          {portfolioItems.map((item, index) => (
+            <article className="portfolio-card" key={item.title}>
               <div className="portfolio-image">
                 {item.image ? (
                   <img
@@ -521,7 +449,7 @@ function Hero() {
                   <span>{item.category}</span>
                   <h3>{item.title}</h3>
                   <span className="portfolio-number">
-                    {String(index + 1).padStart(2, "0")} ↗
+                    0{index + 1} ↗
                   </span>
                 </div>
               </div>
@@ -529,24 +457,7 @@ function Hero() {
           ))}
         </div>
 
-        {!isLoading && allPortfolioItems.length === 0 && (
-          <p style={{ textAlign: "center", opacity: 0.7 }}>
-            New work is coming soon.
-          </p>
-        )}
-
         <div className="section-button-wrapper">
-          {visibleCount < allPortfolioItems.length && (
-            <button
-              type="button"
-              className="dark-button"
-              style={{ border: "none", cursor: "pointer" }}
-              onClick={() => setVisibleCount((count) => count + 9)}
-            >
-              Show More Work ↓
-            </button>
-          )}
-
           <Link to="/client-galleries" className="dark-button">
             View Client Galleries ↗
           </Link>

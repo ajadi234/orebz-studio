@@ -3,16 +3,13 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Booking.css";
 
-// AUTOMATICALLY LOAD EXISTING PHOTOS
+// LOAD OPTIMIZED WEBP PHOTOS ONLY
 const bookingImages = Object.values(
-  import.meta.glob(
-    "./assets/images/*.{jpg,jpeg,png,webp}",
-    {
-      eager: true,
-      query: "?url",
-      import: "default",
-    }
-  )
+  import.meta.glob("./assets/images/*.webp", {
+    eager: true,
+    query: "?url",
+    import: "default",
+  })
 );
 
 const bookingBackground = bookingImages[0];

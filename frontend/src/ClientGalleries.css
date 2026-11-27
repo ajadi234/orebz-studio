@@ -31,7 +31,7 @@
       rgba(0, 0, 0, 0.05),
       rgba(0, 0, 0, 0.4)
     ),
-    url("./assets/images/portrait-04.jpg")
+    url("./assets/images/portrait-04.webp")
       center center / cover no-repeat;
   z-index: 0;
 }
